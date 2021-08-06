@@ -17,6 +17,29 @@
     <textarea id="output" style="width: 100%" rows="6" disabled></textarea>
 
     <script>
+
+      async function loadImage() {
+          let proxy = ""; // "https://cors-proxy.htmldriven.com/?url=";  //"https://starboardproxy.com/";
+          let url = "https://boisgera.github.io/pyodide/images/anastasia-eremina-VI2rIoZUrks-unsplash.jpg";
+          let response = await fetch(proxy + url);
+          let headers = response.headers; // "Content-Disposition" not in there :(. Probably the proxy? 'nyway, is not used (???)
+          console.log(headers)
+          for (let key of headers.entries()) {
+            console.log(key);
+          }
+          console.log(headers.has("content-length"));
+          console.log(headers.get("content-length"));
+          let filename = "image"
+          if (headers["content-type"] === "image/jpeg") {
+            filename = filename + ".jpg"
+          }
+          blob = await response.blob();
+          buffer = await blob.arrayBuffer();
+          array = new Uint8Array(buffer);
+      }
+
+      loadImage();
+
       const output = document.getElementById("output");
       const code = document.getElementById("code");
 
