@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"
+    />
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.20.0/full/pyodide.js"></script>
+    <script type="text/javascript">
+      src = `
+import js
+import matplotlib
+
+matplotlib.use("module://matplotlib.backends.html5_canvas_backend")
+import matplotlib.pyplot as plt
+
+fig = plt.figure()
+def find_target():
+    return js.document.getElementById("figure")
+fig.canvas.create_root_element = find_target
+
+plt.plot([1, 2, -1])
+plt.show()
+`;
+      async function main() {
+        let pyodide = await loadPyodide();
+        console.log(
+          pyodide.runPython(`
+              import sys
+              sys.version
+          `)
+        );
+        console.log(pyodide.runPython("print(1 + 2)"));
+        await pyodide.loadPackage("matplotlib");
+        pyodide.runPython(src);
+        // pyodide.runPython(src);
+        // How can I target a given div now ?
+      }
+      main();
+    </script>
+  </head>
+  <body>
+    <h1>Matplotlib</h1>
+    <p>Target div</p>
+    <div id="figure"></div>
+    <hr />
+  </body>
+</html>
